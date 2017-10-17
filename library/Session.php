@@ -1,10 +1,10 @@
 <?php
-namespace Swiftx\Http\Component;
+namespace Swiftx\Component\Httpd;
 use Swiftx\Http\Interfaces\Session as InterfaceSession;
 
 /**
  * Class Session
- * @package Swiftx\Component\Httpd
+ * @package Swiftx\Http\Component
  */
 class Session implements InterfaceSession {
 
