@@ -21,7 +21,9 @@
   },
   "autoload": {
     "psr-4": {
-      "Swiftx\\Http\\": "library/"
+      "Swiftx\\Http\\Interfaces\\": "interface/",
+      "Swiftx\\Http\\Component\\": "library/",
+      "Swiftx\\Http\\Test\\" : "tests/"
     }
   }
 }
