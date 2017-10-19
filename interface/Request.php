@@ -7,6 +7,18 @@ namespace Swiftx\Http\Interfaces;
 interface Request {
 
     /**
+     * 设置状态参数
+     * @param int $code
+     */
+    public function setStatus(int $code);
+
+    /**
+     * 获取状态码
+     * @return int
+     */
+    public function getStatus():int ;
+
+    /**
      * 设置请求方式
      * @param string $value
      * @return void

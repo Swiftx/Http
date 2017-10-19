@@ -14,6 +14,12 @@ use Swiftx\Http\Interfaces\Uri as UriInterfaces;
 class Request implements RequestInterfaces {
 
     /**
+     * 状态码
+     * @var int
+     */
+    protected $status = 0;
+
+    /**
      * 请求方式
      * @var string
      */
@@ -24,6 +30,12 @@ class Request implements RequestInterfaces {
      * @var int
      */
     protected $create_time = null;
+
+    /**
+     * 请求参数
+     * @var string[]
+     */
+    protected $params = [];
 
     /**
      * 目标Uri地址
@@ -62,6 +74,22 @@ class Request implements RequestInterfaces {
     protected $languages = [];
 
     /**
+     * 设置状态参数
+     * @param int $code
+     */
+    public function setStatus(int $code){
+        $this->status = $code;
+    }
+
+    /**
+     * 获取状态码
+     * @return int
+     */
+    public function getStatus():int {
+        return $this->status;
+    }
+
+    /**
      * 设置请求方式
      * @param string $value
      * @return void
@@ -92,6 +120,26 @@ class Request implements RequestInterfaces {
      */
     public function getCreateTime():int{
         return $this->create_time;
+    }
+
+    /**
+     * 设置附加参数
+     * @param string $key
+     * @param string $value
+     */
+    public function setParam(string $key, string $value){
+        $this->params[$key] = $value;
+    }
+
+    /**
+     * 获取附加参数
+     * @param string $key
+     * @return null|string
+     */
+    public function getParam(string $key):?string {
+        if(array_key_exists($key, $this->params))
+            return $this->params[$key];
+        return $this->getUri()->getParam($key);
     }
 
     /**
@@ -250,5 +298,15 @@ class Request implements RequestInterfaces {
         return $request;
     }
 
+    /**
+     * 对象深拷贝
+     */
+    public function __clone(){
+        $this->uri = clone $this->uri;
+        $this->cookie = clone $this->cookie;
+        $this->session = clone $this->session;
+        foreach ($this->uploads as &$upload)
+            $upload = clone $upload;
+    }
 
 }

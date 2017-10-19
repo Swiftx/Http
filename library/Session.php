@@ -1,5 +1,5 @@
 <?php
-namespace Swiftx\Component\Httpd;
+namespace Swiftx\Http\Component;
 use Swiftx\Http\Interfaces\Session as InterfaceSession;
 
 /**
