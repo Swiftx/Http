@@ -236,8 +236,10 @@ class Request implements RequestInterfaces {
      * 对象深拷贝
      */
     public function __clone(){
-        $this->uri = clone $this->uri;
-        $this->session = clone $this->session;
+        if($this->uri != null)
+            $this->uri = clone $this->uri;
+        if($this->session != null)
+            $this->session = clone $this->session;
         foreach ($this->uploads as &$upload)
             $upload = clone $upload;
     }
