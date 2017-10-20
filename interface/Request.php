@@ -7,18 +7,6 @@ namespace Swiftx\Http\Interfaces;
 interface Request {
 
     /**
-     * 设置状态参数
-     * @param int $code
-     */
-    public function setStatus(int $code);
-
-    /**
-     * 获取状态码
-     * @return int
-     */
-    public function getStatus():int ;
-
-    /**
      * 设置请求方式
      * @param string $value
      * @return void
@@ -75,15 +63,15 @@ interface Request {
 
     /**
      * 设置Cookie对象
-     * @param Cookie $value
+     * @param string $value
      */
-    public function setCookie(Cookie $value);
+    public function setCookie(string $key, string $value);
 
     /**
      * 获取Cookie对象
-     * @return Cookie
+     * @return string|null
      */
-    public function getCookie():?Cookie;
+    public function getCookie(string $key):?string ;
 
     /**
      * 获取SESSION对象

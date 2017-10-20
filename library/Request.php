@@ -14,12 +14,6 @@ use Swiftx\Http\Interfaces\Uri as UriInterfaces;
 class Request implements RequestInterfaces {
 
     /**
-     * 状态码
-     * @var int
-     */
-    protected $status = 0;
-
-    /**
      * 请求方式
      * @var string
      */
@@ -45,9 +39,9 @@ class Request implements RequestInterfaces {
 
     /**
      * Cookie
-     * @var CookieInterfaces
+     * @var string[]
      */
-    protected $cookie = null;
+    protected $cookie = [];
 
     /**
      * SESSION
@@ -72,22 +66,6 @@ class Request implements RequestInterfaces {
      * @var string[]
      */
     protected $languages = [];
-
-    /**
-     * 设置状态参数
-     * @param int $code
-     */
-    public function setStatus(int $code){
-        $this->status = $code;
-    }
-
-    /**
-     * 获取状态码
-     * @return int
-     */
-    public function getStatus():int {
-        return $this->status;
-    }
 
     /**
      * 设置请求方式
@@ -160,18 +138,21 @@ class Request implements RequestInterfaces {
 
     /**
      * 设置Cookie对象
-     * @param CookieInterfaces $value
+     * @param string $key
+     * @param string $value
      */
-    public function setCookie(CookieInterfaces $value){
-        $this->cookie = $value;
+    public function setCookie(string $key, string $value){
+        $this->cookie[$key] = $value;
     }
 
     /**
      * 获取Cookie对象
-     * @return CookieInterfaces
+     * @return string|null
      */
-    public function getCookie(): ?CookieInterfaces {
-        return $this->cookie;
+    public function getCookie(string $key):?string {
+        if(array_key_exists($key, $this->cookie))
+            return $this->cookie[$key];
+        return null;
     }
 
     /**
@@ -252,6 +233,16 @@ class Request implements RequestInterfaces {
     }
 
     /**
+     * 对象深拷贝
+     */
+    public function __clone(){
+        $this->uri = clone $this->uri;
+        $this->session = clone $this->session;
+        foreach ($this->uploads as &$upload)
+            $upload = clone $upload;
+    }
+
+    /**
      * 从全局数组捕获Request对象
      * @return RequestInterfaces
      */
@@ -276,12 +267,9 @@ class Request implements RequestInterfaces {
         $post->setData($_POST);
         $request->setPost($post);
 
-        // 全局数据构造SESSION
-        session_start();
-        $session = new Session();
-        $session->setID(session_id());
-        $session->mapData($_SESSION);
-        $request->setSession($session);
+        // 创建Cookie的数据
+        foreach ($_COOKIE as $key => $value)
+            $request->setCookie($key, $value);
 
         // 从全局数据构造Upload
         foreach($_FILES as $key => $item){
@@ -294,19 +282,15 @@ class Request implements RequestInterfaces {
             $request->setUpload($key, $upload);
         }
 
+        // 全局数据构造SESSION
+        session_start();
+        $session = new Session();
+        $session->setID(session_id());
+        $session->mapData($_SESSION);
+        $request->setSession($session);
+
         // 返回构造完成的请求对象
         return $request;
-    }
-
-    /**
-     * 对象深拷贝
-     */
-    public function __clone(){
-        $this->uri = clone $this->uri;
-        $this->cookie = clone $this->cookie;
-        $this->session = clone $this->session;
-        foreach ($this->uploads as &$upload)
-            $upload = clone $upload;
     }
 
 }
